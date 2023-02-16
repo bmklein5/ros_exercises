@@ -45,7 +45,8 @@ def simple_publisher():
     rospy.init_node('simple_publisher', anonymous=True)
     rate = rospy.Rate(20) # 20hz
     while not rospy.is_shutdown():
-        num = random.randint(0, 10)
+        #num = random.randint(0, 10)
+        num = random.random() * 10
         rospy.loginfo(num)
         pub.publish(num)
         rate.sleep()
