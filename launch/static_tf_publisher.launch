@@ -1,0 +1,15 @@
+<launch>
+    <node
+        name="static_tf_cam_publisher_left"
+        pkg="tf2_ros"
+        type="static_transform_publisher"
+        args="-0.05 0 0 0 0 0 1 base_link_gt left_cam"
+    />
+    <node
+        name="static_tf_cam_publisher_right"
+        pkg="tf2_ros"
+        type="static_transform_publisher"
+        args="0.05 0 0 0 0 0 1 base_link_gt right_cam"
+    />
+    <node name="base_link_tf_pub" pkg="ros_exercises" type="base_link_tf_pub.py"/>
+</launch>
