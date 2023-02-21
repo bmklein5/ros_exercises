@@ -51,8 +51,12 @@ def open_space_publisher():
     # run simultaneously.
     # pub_dist = rospy.Publisher('open_space/distance', Float32, queue_size=10)
     # pub_angle = rospy.Publisher('open_space/angle', Float32, queue_size=10)
-    pub = rospy.Publisher('open_space', OpenSpace, queue_size=10)
     rospy.init_node('open_space_publisher', anonymous=True)
+
+    pub_topic = rospy.get_param("publish topic", "open_space")
+    sub_topic = rospy.get_param("subscriber topic", "fake_scan")
+
+    pub = rospy.Publisher(pub_topic, OpenSpace, queue_size=10)
 
     def callback(data):
         longest_return = max(data.ranges)
@@ -65,7 +69,7 @@ def open_space_publisher():
         # pub_angle.publish(angle)
         # pub_dist.publish(longest_return)
 
-    rospy.Subscriber('fake_scan', LaserScan, callback)
+    rospy.Subscriber(sub_topic, LaserScan, callback)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()

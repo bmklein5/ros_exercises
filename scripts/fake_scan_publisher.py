@@ -44,34 +44,37 @@ from std_msgs.msg import Header
 
 
 def fake_scan_publisher():
-    pub = rospy.Publisher('fake_scan', LaserScan, queue_size=10)
     rospy.init_node('fake_scan_publisher', anonymous=True)
-    rate = rospy.Rate(20) # 20hz
+
+    # define all the params
+    pub_topic = rospy.get_param("publish topic", "fake_scan")
+    publish_rate = rospy.get_param("publish rate", 20) # 20hz
+    a_min = rospy.get_param("angle_min", -2.0 / 3 * np.pi)
+    a_max = rospy.get_param("angle_max", 2.0 / 3 * np.pi)
+    a_inc = rospy.get_param("angle_increment", 1.0 / 300 * np.pi)
+    r_min = rospy.get_param("range_min", 1.0)
+    r_max = rospy.get_param("range_max", 10.0)
+
+    pub = rospy.Publisher(pub_topic, LaserScan, queue_size=10)
+    rate = rospy.Rate(publish_rate)
 
     while not rospy.is_shutdown():
-        # define all the params
-        aMin = -2.0/3*np.pi
-        aMax = 2.0/3*np.pi
-        aInc = 1.0/300*np.pi
-        rMin = 1.0
-        rMax = 10.0
-
         # set up my ranges
         range_list = []
         # print(np.pi)
         # print(aInc)
-        seq = range(int(round(abs( (aMax - aMin)/aInc ))) + 1)
+        seq = range(int(round(abs( (a_max - a_min)/a_inc ))) + 1)
         for i in seq:
-            range_list.append(random.uniform(rMin, rMax))
+            range_list.append(random.uniform(r_min, r_max))
 
         # define my scan
         scan = LaserScan(
             header = Header(stamp=rospy.get_rostime(), frame_id="base_link"),
-            angle_min = aMin,
-            angle_max = aMax,
-            angle_increment = aInc,
-            range_min = rMin,
-            range_max = rMax,
+            angle_min = a_min,
+            angle_max = a_max,
+            angle_increment = a_inc,
+            range_min = r_min,
+            range_max = r_max,
             ranges = range_list
         )
 
